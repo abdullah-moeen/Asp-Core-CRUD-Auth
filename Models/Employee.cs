@@ -11,6 +11,9 @@ namespace CORE_CRUD.Models
         [Required]
         [Display(Name ="Full Name")]
         public string FullName { get; set; }
+        [Required]
+        [Display(Name ="Email")]
+        public string Email { get; set; }
         [Column(TypeName = "varchar(10)")]
         [Display(Name = "Employee Code")]
         public string EmpCode { get; set; }

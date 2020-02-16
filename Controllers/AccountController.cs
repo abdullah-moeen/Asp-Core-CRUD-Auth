@@ -21,11 +21,32 @@ namespace CORE_CRUD.Controllers
             SignInMgr = signInManager;
         }
 
-        public async Task<IActionResult> Login()
+        [HttpGet]
+        public IActionResult Login()
         {
             return View();
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Login(LoginViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = await SignInMgr.PasswordSignInAsync(model.Email, model.Password,
+                    model.RememberMe, false);
+
+                if (result.Succeeded)
+                {
+                    return RedirectToAction("Index", "Employees");
+                }
+
+                ModelState.AddModelError(string.Empty, "Invalid Login Attempt");
+            }
+
+            return View();
+        }
+
+        [HttpPost]
         public async Task<IActionResult> Logout()
         {
             await SignInMgr.SignOutAsync();
@@ -37,6 +58,7 @@ namespace CORE_CRUD.Controllers
         {
             return View();
         }
+
         [HttpPost]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {

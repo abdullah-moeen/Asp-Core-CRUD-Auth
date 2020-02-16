@@ -2,114 +2,42 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CORE_CRUD.DTOs.EmployeeDto;
+using CORE_CRUD.Services.EmployeeService;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using CORE_CRUD.Models;
-using Microsoft.AspNetCore.Authorization;
 
 namespace CORE_CRUD.Controllers
 {
     public class EmployeesController : Controller
     {
-        private readonly EmployeeContext _context;
+        private readonly IEmployeeService _service;
 
-        public EmployeesController(EmployeeContext context)
+        public EmployeesController(IEmployeeService service)
         {
-            _context = context;
+            _service = service;
         }
 
-        // GET: Employees
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            return View(await _context.Employees.ToListAsync());
+            return View(_service.AllEmployees());
         }
 
-        // GET: Employees/Details/5
-        public async Task<IActionResult> Details(int? id)
+        [HttpGet]
+        public IActionResult AddEmployee()
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var employee = await _context.Employees
-                .FirstOrDefaultAsync(m => m.EmployeeId == id);
-            if (employee == null)
-            {
-                return NotFound();
-            }
-
-            return View(employee);
-        }
-
-        public IActionResult AddOrEdit(int id)
-        {
-            if (id == 0)
-            {
-                return View(new Employee());
-            }
-            else
-            {
-                return View(_context.Employees.Find(id));
-            }
+            return View();
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddOrEdit([Bind("EmployeeId,FullName,EmpCode,Position,OfficeLocation")] Employee employee)
+        public IActionResult AddEmployee(AddEmpDto addEmpDto)
         {
             if (ModelState.IsValid)
             {
-                if (employee.EmployeeId == 0)
-                {
-                    _context.Add(employee);
-                }
-                else
-                {
-                    _context.Update(employee);
-                }
+                _service.AddEmployee(addEmpDto);
 
-                _context.Add(employee);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", "Employees");
             }
-            return View(employee);
-        }
-
-        // GET: Employees/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var employee = await _context.Employees.FindAsync(id);
-            if (employee == null)
-            {
-                return NotFound();
-            }
-            return View(employee);
-        }
-
-
-        // GET: Employees/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var employee = await _context.Employees
-                .FirstOrDefaultAsync(m => m.EmployeeId == id);
-            if (employee == null)
-            {
-                return NotFound();
-            }
-
-            return View(employee);
+            return View();
         }
     }
 }

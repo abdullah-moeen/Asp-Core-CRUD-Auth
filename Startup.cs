@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CORE_CRUD.Models;
+using CORE_CRUD.Services.EmployeeService;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -46,12 +47,13 @@ namespace CORE_CRUD
                 options.Password.RequiredUniqueChars = 3;
             }).AddEntityFrameworkStores<EmployeeContext>();
 
+            services.AddTransient<IEmployeeService, EmployeeService>();
+
 
             services.Configure<IdentityOptions>(options =>
             {
                 options.Password.RequiredLength = 10;
                 options.Password.RequiredUniqueChars = 3;
-
             });
 
         }
@@ -77,7 +79,7 @@ namespace CORE_CRUD
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    template: "{controller=Account}/{action=Login}/{id?}");
             });
         }
     }

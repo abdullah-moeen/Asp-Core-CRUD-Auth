@@ -1,0 +1,41 @@
+﻿@model CORE_CRUD.DTOs.EmployeeDto.AddEmpDto
+@{
+    ViewData["Title"] = "AddEmployee";
+}
+
+
+<div class="row">
+    <div class="col-md-12">
+        <form method="post" asp-controller="Employees" asp-action="AddEmployee">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="FullName">Full Name</label>
+                <input asp-for="FullName" class="form-control" />
+                <span asp-validation-for="FullName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Email">Email</label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Position">Position</label>
+                <input asp-for="Position" class="form-control" />
+                <span asp-validation-for="Position" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="EmpCode">Employee Code</label>
+                <input asp-for="EmpCode" class="form-control" />
+                <span asp-validation-for="EmpCode" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="OfficeLocation">Office Location</label>
+                <input asp-for="OfficeLocation" class="form-control" />
+                <span asp-validation-for="OfficeLocation" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Add Employee</button>
+        </form>
+    </div>
+</div>
+
