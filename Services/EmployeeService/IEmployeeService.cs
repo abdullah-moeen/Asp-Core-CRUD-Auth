@@ -9,8 +9,10 @@ namespace CORE_CRUD.Services.EmployeeService
 {
     public interface IEmployeeService
     {
+        //Create 
         Task AddEmployee(AddEmpDto addEmpDto);
-        Task EditEmployee();
+        Task EditEmployee(Employee employee);
+        Task DeleteEmployee(int id);
         Task<Employee> GetEmployee();
         List<Employee> AllEmployees();
     }

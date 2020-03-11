@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CORE_CRUD.Migrations
 {
     [DbContext(typeof(EmployeeContext))]
-    [Migration("20200211101245_CreateIdentitySchema")]
-    partial class CreateIdentitySchema
+    [Migration("20200228142140_initialMigration")]
+    partial class initialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -54,6 +54,8 @@ namespace CORE_CRUD.Migrations
 
                     b.Property<int>("AccessFailedCount");
 
+                    b.Property<string>("City");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
 
@@ -82,6 +84,8 @@ namespace CORE_CRUD.Migrations
 
                     b.Property<bool>("PhoneNumberConfirmed");
 
+                    b.Property<string>("Position");
+
                     b.Property<string>("SecurityStamp");
 
                     b.Property<bool>("TwoFactorEnabled");
@@ -107,6 +111,9 @@ namespace CORE_CRUD.Migrations
                     b.Property<int>("EmployeeId")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Email")
+                        .IsRequired();
 
                     b.Property<string>("EmpCode")
                         .HasColumnType("varchar(10)");

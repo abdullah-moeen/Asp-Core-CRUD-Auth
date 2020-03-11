@@ -1,85 +1,74 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace CORE_CRUD.Migrations
 {
-    public partial class CreateIdentitySchema : Migration
+    public partial class initialMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropPrimaryKey(
-                name: "PK_AppUsers",
-                table: "AppUsers");
+            migrationBuilder.CreateTable(
+                name: "AspNetRoles",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Name = table.Column<string>(maxLength: 256, nullable: true),
+                    NormalizedName = table.Column<string>(maxLength: 256, nullable: true),
+                    ConcurrencyStamp = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetRoles", x => x.Id);
+                });
 
-            migrationBuilder.DropPrimaryKey(
-                name: "PK_AppRoles",
-                table: "AppRoles");
+            migrationBuilder.CreateTable(
+                name: "AspNetUsers",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    UserName = table.Column<string>(maxLength: 256, nullable: true),
+                    NormalizedUserName = table.Column<string>(maxLength: 256, nullable: true),
+                    Email = table.Column<string>(maxLength: 256, nullable: true),
+                    NormalizedEmail = table.Column<string>(maxLength: 256, nullable: true),
+                    EmailConfirmed = table.Column<bool>(nullable: false),
+                    PasswordHash = table.Column<string>(nullable: true),
+                    SecurityStamp = table.Column<string>(nullable: true),
+                    ConcurrencyStamp = table.Column<string>(nullable: true),
+                    PhoneNumber = table.Column<string>(nullable: true),
+                    PhoneNumberConfirmed = table.Column<bool>(nullable: false),
+                    TwoFactorEnabled = table.Column<bool>(nullable: false),
+                    LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
+                    LockoutEnabled = table.Column<bool>(nullable: false),
+                    AccessFailedCount = table.Column<int>(nullable: false),
+                    FirstName = table.Column<string>(nullable: true),
+                    LastName = table.Column<string>(nullable: true),
+                    City = table.Column<string>(nullable: true),
+                    Position = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
 
-            migrationBuilder.RenameTable(
-                name: "AppUsers",
-                newName: "AspNetUsers");
-
-            migrationBuilder.RenameTable(
-                name: "AppRoles",
-                newName: "AspNetRoles");
-
-            migrationBuilder.AlterColumn<string>(
-                name: "UserName",
-                table: "AspNetUsers",
-                maxLength: 256,
-                nullable: true,
-                oldClrType: typeof(string),
-                oldNullable: true);
-
-            migrationBuilder.AlterColumn<string>(
-                name: "NormalizedUserName",
-                table: "AspNetUsers",
-                maxLength: 256,
-                nullable: true,
-                oldClrType: typeof(string),
-                oldNullable: true);
-
-            migrationBuilder.AlterColumn<string>(
-                name: "NormalizedEmail",
-                table: "AspNetUsers",
-                maxLength: 256,
-                nullable: true,
-                oldClrType: typeof(string),
-                oldNullable: true);
-
-            migrationBuilder.AlterColumn<string>(
-                name: "Email",
-                table: "AspNetUsers",
-                maxLength: 256,
-                nullable: true,
-                oldClrType: typeof(string),
-                oldNullable: true);
-
-            migrationBuilder.AlterColumn<string>(
-                name: "NormalizedName",
-                table: "AspNetRoles",
-                maxLength: 256,
-                nullable: true,
-                oldClrType: typeof(string),
-                oldNullable: true);
-
-            migrationBuilder.AlterColumn<string>(
-                name: "Name",
-                table: "AspNetRoles",
-                maxLength: 256,
-                nullable: true,
-                oldClrType: typeof(string),
-                oldNullable: true);
-
-            migrationBuilder.AddPrimaryKey(
-                name: "PK_AspNetUsers",
-                table: "AspNetUsers",
-                column: "Id");
-
-            migrationBuilder.AddPrimaryKey(
-                name: "PK_AspNetRoles",
-                table: "AspNetRoles",
-                column: "Id");
+            migrationBuilder.CreateTable(
+                name: "Employees",
+                columns: table => new
+                {
+                    EmployeeId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    FullName = table.Column<string>(type: "nvarchar(250)", nullable: false),
+                    Email = table.Column<string>(nullable: false),
+                    EmpCode = table.Column<string>(type: "varchar(10)", nullable: true),
+                    Position = table.Column<string>(type: "varchar(100)", nullable: true),
+                    OfficeLocation = table.Column<string>(type: "varchar(100)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Employees", x => x.EmployeeId);
+                });
 
             migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
@@ -188,16 +177,9 @@ namespace CORE_CRUD.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "EmailIndex",
-                table: "AspNetUsers",
-                column: "NormalizedEmail");
-
-            migrationBuilder.CreateIndex(
-                name: "UserNameIndex",
-                table: "AspNetUsers",
-                column: "NormalizedUserName",
-                unique: true,
-                filter: "[NormalizedUserName] IS NOT NULL");
+                name: "IX_AspNetRoleClaims_RoleId",
+                table: "AspNetRoleClaims",
+                column: "RoleId");
 
             migrationBuilder.CreateIndex(
                 name: "RoleNameIndex",
@@ -205,11 +187,6 @@ namespace CORE_CRUD.Migrations
                 column: "NormalizedName",
                 unique: true,
                 filter: "[NormalizedName] IS NOT NULL");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AspNetRoleClaims_RoleId",
-                table: "AspNetRoleClaims",
-                column: "RoleId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetUserClaims_UserId",
@@ -225,6 +202,18 @@ namespace CORE_CRUD.Migrations
                 name: "IX_AspNetUserRoles_RoleId",
                 table: "AspNetUserRoles",
                 column: "RoleId");
+
+            migrationBuilder.CreateIndex(
+                name: "EmailIndex",
+                table: "AspNetUsers",
+                column: "NormalizedEmail");
+
+            migrationBuilder.CreateIndex(
+                name: "UserNameIndex",
+                table: "AspNetUsers",
+                column: "NormalizedUserName",
+                unique: true,
+                filter: "[NormalizedUserName] IS NOT NULL");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -244,91 +233,14 @@ namespace CORE_CRUD.Migrations
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
 
-            migrationBuilder.DropPrimaryKey(
-                name: "PK_AspNetUsers",
-                table: "AspNetUsers");
+            migrationBuilder.DropTable(
+                name: "Employees");
 
-            migrationBuilder.DropIndex(
-                name: "EmailIndex",
-                table: "AspNetUsers");
+            migrationBuilder.DropTable(
+                name: "AspNetRoles");
 
-            migrationBuilder.DropIndex(
-                name: "UserNameIndex",
-                table: "AspNetUsers");
-
-            migrationBuilder.DropPrimaryKey(
-                name: "PK_AspNetRoles",
-                table: "AspNetRoles");
-
-            migrationBuilder.DropIndex(
-                name: "RoleNameIndex",
-                table: "AspNetRoles");
-
-            migrationBuilder.RenameTable(
-                name: "AspNetUsers",
-                newName: "AppUsers");
-
-            migrationBuilder.RenameTable(
-                name: "AspNetRoles",
-                newName: "AppRoles");
-
-            migrationBuilder.AlterColumn<string>(
-                name: "UserName",
-                table: "AppUsers",
-                nullable: true,
-                oldClrType: typeof(string),
-                oldMaxLength: 256,
-                oldNullable: true);
-
-            migrationBuilder.AlterColumn<string>(
-                name: "NormalizedUserName",
-                table: "AppUsers",
-                nullable: true,
-                oldClrType: typeof(string),
-                oldMaxLength: 256,
-                oldNullable: true);
-
-            migrationBuilder.AlterColumn<string>(
-                name: "NormalizedEmail",
-                table: "AppUsers",
-                nullable: true,
-                oldClrType: typeof(string),
-                oldMaxLength: 256,
-                oldNullable: true);
-
-            migrationBuilder.AlterColumn<string>(
-                name: "Email",
-                table: "AppUsers",
-                nullable: true,
-                oldClrType: typeof(string),
-                oldMaxLength: 256,
-                oldNullable: true);
-
-            migrationBuilder.AlterColumn<string>(
-                name: "NormalizedName",
-                table: "AppRoles",
-                nullable: true,
-                oldClrType: typeof(string),
-                oldMaxLength: 256,
-                oldNullable: true);
-
-            migrationBuilder.AlterColumn<string>(
-                name: "Name",
-                table: "AppRoles",
-                nullable: true,
-                oldClrType: typeof(string),
-                oldMaxLength: 256,
-                oldNullable: true);
-
-            migrationBuilder.AddPrimaryKey(
-                name: "PK_AppUsers",
-                table: "AppUsers",
-                column: "Id");
-
-            migrationBuilder.AddPrimaryKey(
-                name: "PK_AppRoles",
-                table: "AppRoles",
-                column: "Id");
+            migrationBuilder.DropTable(
+                name: "AspNetUsers");
         }
     }
 }

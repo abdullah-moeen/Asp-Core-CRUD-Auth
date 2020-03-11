@@ -49,7 +49,6 @@ namespace CORE_CRUD
 
             services.AddTransient<IEmployeeService, EmployeeService>();
 
-
             services.Configure<IdentityOptions>(options =>
             {
                 options.Password.RequiredLength = 10;

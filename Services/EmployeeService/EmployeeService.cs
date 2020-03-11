@@ -35,9 +35,26 @@ namespace CORE_CRUD.Services.EmployeeService
             return _context.Employees.ToList();
         }
 
-        public Task EditEmployee()
+        public async Task DeleteEmployee(int id)
         {
-            throw new NotImplementedException();
+            var employeeRecord = await _context.Employees.FindAsync(id);
+            _context.Employees.Remove(employeeRecord);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task EditEmployee(Employee employee)
+        {
+            var employeeRecord = await _context.Employees.FindAsync(employee.EmployeeId);
+
+            employeeRecord.EmployeeId = employee.EmployeeId;
+            employeeRecord.Email = employee.Email;
+            employeeRecord.EmpCode = employee.EmpCode;
+            employeeRecord.FullName = employee.FullName;
+            employeeRecord.OfficeLocation = employee.OfficeLocation;
+            employeeRecord.Position = employee.Position;
+
+            _context.Employees.Update(employeeRecord);
+            await _context.SaveChangesAsync();
         }
 
         public Task<Employee> GetEmployee()

@@ -2,26 +2,177 @@
 
 @{
     ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <style>
-    .row.center {
-        display: flex;
-        align-items: center;
+    .margin-bottom {
+        margin-bottom: 10px;
     }
 </style>
 <div class="form-horizontal">
     <div class="col-md-12 text-center">
+        @{
+            var count = 0;
+            var edit = 0;
+            var delete = 0;
+        }
+
         @foreach (var item in Model)
         {
             <div class="col-md-3" style="background-color: #e5eae5; margin: 10px">
                 <h2>@item.FullName</h2>
                 <div class="form-horizontal">
-                    @Html.ActionLink("View", "Employees", new { id = item.EmployeeId }, new { @class = "btn btn-primary" }) |
-                    @Html.ActionLink("Edit", "Employees", new { id = item.EmployeeId }, new { @class = "btn btn-primary" }) |
-                    @Html.ActionLink("Delete", "Employees", new { id = item.EmployeeId }, new { @class = "btn btn-danger" })
+                    <a class="btn btn-primary" id="view" data-toggle="modal" data-target=".details_@count">View</a>
+                    <a class="btn btn-primary" id="edit" data-toggle="modal" data-target=".edit_@edit">Edit</a>
+                    <a class="btn btn-danger" id="delete" data-toggle="modal" data-target=".delete_@delete">Delete</a>
                 </div>
             </div>
+
+            //Modal for view
+            #region Modal for view
+            <div class="modal fade details_@count" role="dialog">
+                <div class="modal-dialog" style="background-color:white">
+                    <div class="modal-header">
+                        <h3>User Information</h3>
+                    </div>
+                    <div class="modal-body">
+                        <p>@item.FullName</p>
+                        <p>@item.EmpCode</p>
+                        <p>@item.Email</p>
+                        <p>@item.OfficeLocation</p>
+                        <p>@item.Position</p>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="submit" data-dismiss="modal" class="close">Close</button>
+                    </div>
+                </div>
+            </div>
+            #endregion
+
+            //Modal for edit
+            #region modal for edit
+            <div class="modal fade edit_@edit" role="dialog">
+                <div class="modal-dialog" style="background-color:white">
+                    <div class="modal-header">
+                        <h3 id="heading"></h3>
+                    </div>
+                    <form id="editForm" class="container-fluid" method="post">
+                        <div class="modal-body">
+                            <fieldset id="SubmitForm">
+
+                                @Html.HiddenFor(m => item.EmployeeId, new { @id = "EmpId" })
+                                <div class="form-group">
+                                    <input type="text" id="EmpName-@item.EmployeeId" class="form-control" value="@item.FullName" />
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" id="Email-@item.EmployeeId" class="form-control" value="@item.Email" />
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" id="Position-@item.EmployeeId" class="form-control" value="@item.Position" />
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" id="EmpCode-@item.EmployeeId" class="form-control" value="@item.EmpCode" />
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" id="officeLocation-@item.EmployeeId" class="form-control" value="@item.OfficeLocation" />
+                                </div>
+                            </fieldset>
+                        </div>
+                        <div class="modal-footer">
+                            <div style="margin:auto">
+                                <button type="submit" class="btn btn-default" data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary" onclick="confirmEdit(@item.EmployeeId)">Edit</button>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+            #endregion
+
+            //Modal for delete
+            #region modal for delete
+            <div class="modal fade delete_@delete" role="dialog">
+                <div class="modal-dialog" style="background-color:white">
+                    <div class="modal-header">
+                        <h3>Delete User Information</h3>
+                    </div>
+                    <form id="deleteForm" class="container-fluid" method="post">
+                        <div class="modal-body">
+                            <fieldset id="SubmitForm">
+                                @Html.HiddenFor(x => item.EmployeeId, new { id = "EmpId" })
+                                <div class="form-group">
+                                    <input type="text" id="EmpName-@item.EmployeeId" value="@item.FullName" class="form-control" />
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" id="Position-@item.EmployeeId" value="@item.Position" class="form-control" />
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" id="Email-@item.EmployeeId" value="@item.Email" class="form-control" />
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" id="OfficeLocation-@item.EmployeeId" value="@item.OfficeLocation" class="form-control" />
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" id="EmpCode-@item.EmployeeId" value="@item.EmpCode" class="form-control" />
+                                </div>
+                            </fieldset>
+                        </div>
+                        <div class="modal-footer">
+                            <div style="margin:auto">
+                                <button type="submit" class="btn btn-default" data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-danger" onclick="confirmDelete(@item.EmployeeId)">Delete</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            #endregion
+
+            delete++;
+            edit++;
+            count++;
         }
     </div>
 </div>
 
+@section scripts{
+    <script src="~/assets/js/table.min.js"></script>
+    <script src="~/assets/js/pages/tables/jquery-datatable.js"></script>
+
+    <script type="text/javascript">
+        function confirmEdit(id) {
+
+            var data = {};
+
+            data.EmployeeId = id;
+            data.FullName = $("#EmpName-" + id).val();
+            data.Email = $("#Email-" + id).val();
+            data.Position = $("#Position-" + id).val();
+            data.EmpCode = $("#EmpCode-" + id).val();
+            data.officeLocation = $("#officeLocation-" + id).val();
+
+            $.ajax({
+                type: "POST",
+                url: "/Employees/Edit",
+                dataType: 'json',
+                data: data
+            }).done(function (response) {
+                window.location.reload();
+            });
+        }
+
+        function confirmDelete(id) {
+            $.ajax({
+                type: "POST",
+                url: "/Employees/Delete",
+                dataType: "json",
+                data: { id: id }
+            }).done(function (response) {
+                window.location.reload();
+            })
+        }
+    </script>
+
+}

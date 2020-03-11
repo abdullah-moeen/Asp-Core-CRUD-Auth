@@ -1,0 +1,9 @@
+[
+  {
+    "outputFileName": "wwwroot/js/myjs.min.js",
+    "inputFiles": [
+      "node_modules/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.min.js"
+    ]
+  }
+
+]
